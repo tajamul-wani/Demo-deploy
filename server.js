@@ -16,6 +16,7 @@ const COMMIT = (() => {
   try {
     return execSync('git rev-parse --short HEAD', {
       stdio: ['ignore', 'pipe', 'ignore'],
+      cwd: __dirname,
     })
       .toString()
       .trim();
@@ -116,6 +117,6 @@ app.get('/health', (req, res) => {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
+app.listen(port, '127.0.0.1', () => {
   console.log(`${APP_NAME} ${VERSION} (${COMMIT}) listening on port ${port}`);
 });

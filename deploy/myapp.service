@@ -1,0 +1,28 @@
+# Installed to: /etc/systemd/system/myapp.service
+# After editing:  sudo systemctl daemon-reload && sudo systemctl restart myapp
+
+[Unit]
+Description=Demo Deploy Express App
+After=network.target
+
+[Service]
+Type=simple
+
+# Unprivileged user: if the app is compromised, the blast radius is this
+# user's files, not the machine.
+User=tajamul-dev
+WorkingDirectory=/var/www/myapp
+
+# Absolute path is mandatory. systemd does not load shell profiles, so nvm's
+# node (~/.nvm/versions/node/v24.19.0/bin/node) is not on its PATH. A bare
+# "node" here fails with status=203/EXEC even though it works interactively.
+ExecStart=/usr/bin/node /var/www/myapp/server.js
+
+Restart=always
+RestartSec=3
+
+Environment=NODE_ENV=production
+Environment=PORT=3000
+
+[Install]
+WantedBy=multi-user.target
